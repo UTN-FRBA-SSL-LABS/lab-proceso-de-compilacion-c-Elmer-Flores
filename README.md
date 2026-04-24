@@ -347,11 +347,11 @@ Todos son correctos. Lo importante no es el número exacto sino que sea **varios
 **P1.** Ejecutá `wc -l programa.i` y escribí el número de líneas que obtenés.
 
 <!-- Completá la línea siguiente con el número exacto (solo dígitos, sin espacios): -->
-LINEAS_I=
+LINEAS_I= 1808
 
 ¿Por qué ese número es tan mayor que las 94 líneas de `programa.c`?
 
-> **R:**
+> **R:** Porque tiene los headers de bibliotecas instaladas en sistema, los creados por nosotros, declaraciones internas, macros auxliares y macro funciones
 
 ---
 
@@ -390,11 +390,11 @@ grep "Archivo fuente principal" programa.i   # no debe encontrar nada
 ¿El comando encuentra algo o no devuelve nada?
 
 <!-- Completá con SI (si encontró algo) o NO (si no encontró nada): -->
-COMENTARIOS_EN_I=
+COMENTARIOS_EN_I= NO
 
 ¿Por qué ocurre eso?
 
-> **R:**
+> **R:** Porque los comentarios son eliminados en la etapa de preprocesamiento y no llegan a la etapa de compilacion
 
 ---
 
@@ -423,24 +423,24 @@ Nótese que `CUADRADO(5)` se expande a `((5) * (5))`, con los paréntesis extra 
 
 **P3.** Ejecutá `grep -n "CUADRADO" programa.i` y copiá la salida completa.
 
-> **R:**
+> **R:** 1777:    printf("CUADRADO(%d)      = %d\n", 5, ((5) * (5)));
 
 ¿El nombre `CUADRADO` aparece tal cual en `programa.i`, o fue reemplazado
 por otra cosa? Respondé SI o NO:
 
 <!-- Completá con SI o NO: -->
-CUADRADO_EN_I=
+CUADRADO_EN_I=SI
 
 ---
 
 **P4.** Ejecutá `grep -n '"1\.0"' programa.i` y copiá la línea encontrada.
 
-> **R:**
+> **R:** 1768:    printf("=== Laboratorio de Compilacion en C (v%s) ===\n\n", "1.0");
 
 ¿Cuál era el nombre de la macro en `programa.c` que fue reemplazada por `"1.0"`?
 
 <!-- Completá con el nombre exacto de la macro (en mayúsculas, como está en el fuente): -->
-NOMBRE_MACRO_VERSION=
+NOMBRE_MACRO_VERSION= VERSION
 
 ---
 
@@ -476,13 +476,13 @@ gcc -E programa.c | grep "Iniciando"
 gcc -E -DDEBUG programa.c | grep "Iniciando"
 ```
 
-> **R:**
+> **R:** printf("[DEBUG] %s\n", ("Iniciando main"));
 
 ¿Agregar `-DDEBUG` hace que aparezca código nuevo en el `.i` que antes no estaba?
 Respondé SI o NO:
 
 <!-- Completá con SI o NO: -->
-DEBUG_ACTIVA_CODIGO=
+DEBUG_ACTIVA_CODIGO=SI
 
 ---
 
@@ -505,7 +505,7 @@ grep -n "stdio.h" programa.i | head -5
 
 ¿Qué información comunican esas líneas `# N "archivo"`? ¿De qué archivo proviene el bloque que contiene la declaración de `printf`?
 
-> **R:**
+> **R:** Provienen del archivo stdio.h
 
 ---
 
@@ -661,26 +661,29 @@ Aparecen como instrucciones de llamada (por ejemplo `bl _area_circulo`), pero **
 
 **P7.** Ejecutá `grep "area_circulo" programa.s` y copiá la salida.
 
-> **R:**
+> **R:** .ascii "area_circulo(%.1f) = %.4f\12\0"    call    area_circulo    .def    area_circulo;   .scl    2;      .type   32;     .endef
 
 ¿`area_circulo` aparece como una función *definida* en `programa.s`
 (con su propio bloque de instrucciones) o solo como una *llamada* (instrucción sin cuerpo)?
 Respondé DEFINIDA o LLAMADA:
 
 <!-- Completá con DEFINIDA o LLAMADA: -->
-AREA_EN_S=
+AREA_EN_S= DEFINIDA
 
 ---
 
 **P8.** Encontrá en `programa.s` la etiqueta `sumar:` o `_sumar:` y copiá
 las primeras 4 líneas de instrucciones que le siguen.
 
-> **R:**
+> **R:** pushq   %rbp
+        .seh_pushreg    %rbp
+        movq    %rsp, %rbp
+        .seh_setframe   %rbp, 0
 
 Explicá en términos generales qué hacen esas instrucciones
 (usá los comentarios del laboratorio como guía):
 
-> **R:**
+> **R:** guardo un valor y creo algo nuevo  
 
 ---
 
@@ -693,13 +696,18 @@ grep "llamadas" programa.s
 
 **P9.** Ejecutá `grep "llamadas" programa.s` y copiá la salida.
 
-> **R:**
+> **R:** globl  llamadas
+llamadas:
+        movl    llamadas(%rip), %eax
+        movl    %eax, llamadas(%rip)
+        movl    llamadas(%rip), %eax
+
 
 ¿Aparece la variable `llamadas` en el ensamblador?
 Respondé SI o NO:
 
 <!-- Completá con SI o NO: -->
-LLAMADAS_EN_S=
+LLAMADAS_EN_S= SI
 
 ---
 
@@ -803,13 +811,27 @@ Salida esperada (simplificada):
 
 **P10.** Ejecutá `nm programa.o` y copiá la salida completa.
 
-> **R:**
+> **R:** 0000000000000000 p .pdata
+0000000000000000 r .rdata
+0000000000000000 r .rdata$zzz
+0000000000000000 t .text
+0000000000000000 r .xdata
+                 U __imp___acrt_iob_func
+                 U __main
+                 U __mingw_vfprintf
+                 U area_circulo
+                 U factorial
+00000000000001b3 T imprimir_separador
+0000000000000000 B llamadas
+0000000000000077 T main
+0000000000000000 t printf
+0000000000000054 T sumar
 
 ¿Con qué letra aparece `area_circulo` en esa tabla?
 Escribí solo la letra (una mayúscula):
 
 <!-- Completá con la letra exacta que muestra nm (U, T, D, etc.): -->
-TIPO_AREA_EN_O=
+TIPO_AREA_EN_O=U
 
 ---
 
@@ -829,13 +851,13 @@ nm matematica.o
 **P11.** ¿Por qué `area_circulo` tiene ese tipo en `programa.o`
 pero tipo `T` en `matematica.o`?
 
-> **R:**
+> **R:** Porque en programa.o hace referencia a area_circulo pero no esta definido en ella, en cambio en matematica.o esta defenido como funcion en este archivo
 
 ¿Qué etapa del proceso de compilación resuelve esa diferencia?
 Respondé con una palabra: PREPROCESAMIENTO, COMPILACION, ENSAMBLADO o ENLAZADO:
 
 <!-- Completá con una de las cuatro opciones: -->
-ETAPA_QUE_RESUELVE=
+ETAPA_QUE_RESUELVE=ENLAZADO
 
 ---
 
@@ -854,13 +876,13 @@ Un `.o` no es ejecutable por dos razones:
 
 **P12.** Intentá ejecutar `./programa.o` directamente. ¿Qué mensaje aparece?
 
-> **R:**
+> **R:**bash: ./programa.o: cannot execute binary file: Exec format error
 
 ¿Se puede ejecutar un archivo `.o` directamente?
 Respondé SI o NO:
 
 <!-- Completá con SI o NO: -->
-EJECUTABLE_O=
+EJECUTABLE_O=NO
 
 ---
 
@@ -949,13 +971,13 @@ nm programa | grep area_circulo
 **P13.** Enlazá con `gcc programa.o matematica.o -o programa`.
 Ejecutá `nm programa | grep "area_circulo"` y copiá la salida.
 
-> **R:**
+> **R:**0000000140001630 T area_circulo
 
 ¿Con qué letra aparece ahora `area_circulo` en el ejecutable final?
 Escribí solo la letra:
 
 <!-- Completá con la letra exacta que muestra nm: -->
-TIPO_AREA_ENLAZADO=
+TIPO_AREA_ENLAZADO=T
 
 ---
 
@@ -971,17 +993,17 @@ Quedan algunos `U` incluso en el ejecutable final. ¿Por qué? Son funciones de 
 
 **P14.** Ejecutá `nm programa | grep "^ *U"` y copiá la salida.
 
-> **R:**
+> **R:**                 U __end__
 
 ¿Quedan símbolos de tipo `U` en el ejecutable final?
 Respondé SI o NO:
 
 <!-- Completá con SI o NO: -->
-SIMBOLOS_U_FINAL=
+SIMBOLOS_U_FINAL=SI
 
 ¿Por qué quedan? ¿Quién los resuelve y cuándo?
 
-> **R:**
+> **R:**Porque son funciones de bibliotecas dinamicas del sistema, como se cargan a medida del tiempo de ejecucion, no les toma el nombre para quedan en espera y se resuelven al ejecutarse, de esta forma siendo mas ligeros
 
 ---
 
@@ -995,12 +1017,12 @@ SIMBOLOS_U_FINAL=
 
 **P15.** Ejecutá `./programa` y copiá la salida completa.
 
-> **R:**
+> **R:**MAX(7, 12) = 12 ---------------------------------------- area_circulo(5.0) = 78.5398 Factoriales: 0! = 1 1! = 1 2! = 2 3! = 6 4! = 24 5! = 120 ---------------------------------------- Llamadas a sumar(): 1
 
 ¿Qué valor da `factorial(5)`? Escribí solo el número:
 
 <!-- Completá con el número exacto: -->
-FACTORIAL_5=
+FACTORIAL_5=120
 
 ---
 
@@ -1012,25 +1034,28 @@ FACTORIAL_5=
 como `CUADRADO(x)` y una **función real** como `sumar(a, b)`.
 ¿En qué etapa "desaparece" cada una? ¿Cuál tiene verificación de tipos?
 
-> **R:**
+> **R:**CUADRADO es desaparece en la etapa de preprocesamiento y sumar desaparece en el enlazado, sumar tiene mejor verificacion de tipos
 
 ---
 
 **P17.** ¿Qué diferencia hay entre un símbolo de tipo `T` y uno de tipo `D`
 en la salida de `nm`? ¿En qué sección del archivo objeto vive cada uno?
 
-> **R:**
+> **R:** T algo esta definido, este se encuenta en la seccion de texto de codigo ejecutable, D define variables globales con valor inicial, esta en la seccion de data, y nm sirve para ver la informacion de cada simbolo dentro del archivo objeto, este no forma parte del archivo objeto es como una herramienta.  
 
 ---
 
 **P18.** (Bonus) Ejecutá `otool -L programa` (macOS) o `ldd programa` (Linux)
 y copiá la salida.
 
-> **R:**
+> **R:**ntdll.dll => /c/WINDOWS/SYSTEM32/ntdll.dll (0x7ffbde430000)
+        KERNEL32.DLL => /c/WINDOWS/System32/KERNEL32.DLL (0x7ffbdd290000)
+        KERNELBASE.dll => /c/WINDOWS/System32/KERNELBASE.dll (0x7ffbdbec0000)
+        msvcrt.dll => /c/WINDOWS/System32/msvcrt.dll (0x7ffbdd880000)
 
 ¿Por qué `libc` no hubo que especificarla explícitamente al enlazar con `gcc`?
 
-> **R:**
+> **R:**Como gcc actua como driver, al enlazar automaticamente incluye libc que es una biblioteca estandar de C
 
 ---
 
@@ -1227,15 +1252,19 @@ a. ¿Cuántas veces se evalúa `n++`? ¿Por qué?
 b. ¿Cuál sería el resultado? ¿Es el esperado?
 c. ¿Cómo se resolvería este problema usando una función real en lugar de una macro?
 
+**a.** Se evalua 2 veces, ya que tengo n++ me aparece dos veces asi que debe ser por eso, cada uno se evalua
+**b.** Me dio 12, si era el que yo esperada
+**c.** Primero definiria la funcion que devuelve y que espera, despues escribiria la funcion y su logica, recibe x e y , devuelve x*y.
+
 ### E2 — Provocar y leer errores del compilador
 
-a. **Error léxico:** en `programa.c`, escribí una cadena sin cerrar: `printf("hola`. Intentá compilar con `gcc -S programa.c`. ¿En qué etapa falla y qué dice el mensaje de error?
+a. **Error léxico:** en `programa.c`, escribí una cadena sin cerrar: `printf("hola`. Intentá compilar con `gcc -S programa.c`. ¿En qué etapa falla y qué dice el mensaje de error? Veo que falla en el analisis lexico, osea en compilacion, no es valido formar eso con el lenguaje, el mensaje de error señala la constante de caracter faltante, tambien habla del token.
 
-b. **Error sintáctico:** quitá un `;` al final de una declaración de variable. ¿Qué reporta el compilador? ¿Menciona la línea correcta?
+b. **Error sintáctico:** quitá un `;` al final de una declaración de variable. ¿Qué reporta el compilador? ¿Menciona la línea correcta? Me dice que esperaba una `,` o `;` despues del `printf` y me menciona la linea correcta. Evidentemente si es un error sintactico, existen la palabras formadas en el lenguaje, pero la falla en la estructura quiero decir que le falta algo que es la `;`. Por esto falla en la etapa de analisis sintacto, es decir en compilacion.
 
-c. **Error semántico:** cambiá la llamada `sumar(3, 4)` por `sumar(3, 4, 5)`. ¿En qué etapa falla? ¿Por qué es semántico y no sintáctico?
+c. **Error semántico:** cambiá la llamada `sumar(3, 4)` por `sumar(3, 4, 5)`. ¿En qué etapa falla? ¿Por qué es semántico y no sintáctico? Falla en la etapa de compilacion, analisis semantico, me dice que hay muchos argumentos en la funcion sumer, y me indica como esta declarada la funcion osea lo que deberia seguir al pie de la letra por decir de alguna manera, osea escribi algo que no concuerda con lo que se suponia. No es error sintactico porque tiene el nombre de la funcion, la lista de argumentos, los parentesis, osea que todo es aceptado como bien.
 
-d. **Error de enlazado:** comentá toda la implementación de `factorial` en `matematica.c` y recompilá solo el objeto (`gcc -c matematica.c -o matematica.o`). ¿Falla? Ahora intentá enlazar. ¿Cuándo falla y cuál es el mensaje exacto?
+d. **Error de enlazado:** comentá toda la implementación de `factorial` en `matematica.c` y recompilá solo el objeto (`gcc -c matematica.c -o matematica.o`). ¿Falla? Ahora intentá enlazar. ¿Cuándo falla y cuál es el mensaje exacto? No, pero si intento enlazar, si falla, ya que me dice que factorial no esta definido, el mensaje como tal: C:/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/12.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: programa.o:programa.c:(.text+0x192): undefined reference to `factorial' collect2.exe: error: ld returned 1 exit status
 
 ### E3 — Agregar una función nueva
 
@@ -1248,10 +1277,10 @@ d. Compilar paso a paso y verificar con `nm` que el símbolo `potencia` aparece 
 
 a. Compilar el programa con enlazado estático: `gcc programa.c matematica.c -o programa_static -static` (puede no funcionar en macOS; usar Linux o WSL).
 b. Comparar el tamaño del ejecutable dinámico vs el estático con `ls -lh programa programa_static`.
-c. Ejecutar `ldd programa_static` (Linux). ¿Qué diferencia hay respecto a `ldd programa`?
+c. Ejecutar `ldd programa_static` (Linux). ¿Qué diferencia hay respecto a `ldd programa`? Ninguna veo todo igual
 
 ### E5 — Inspección con Clang
 
-a. Ejecutar `clang -Xclang -dump-tokens programa.c 2>&1 | grep "programa.c" | wc -l`. ¿Cuántos tokens tiene `programa.c`?
-b. Buscar en la salida del AST (`clang -Xclang -ast-dump`) la función `factorial`. ¿Cómo se representa la recursión en el árbol?
-c. ¿Aparece algún `ImplicitCastExpr` en el AST? ¿Qué conversión realiza?
+a. Ejecutar `clang -Xclang -dump-tokens programa.c 2>&1 | grep "programa.c" | wc -l`. ¿Cuántos tokens tiene `programa.c`? Tiene 226 Tokens.
+b. Buscar en la salida del AST (`clang -Xclang -ast-dump`) la función `factorial`. ¿Cómo se representa la recursión en el árbol? Llama a la funcion, dentro de su cuerpo se llama a si misma DelRefExpr y apunta a mi funcion, y vuelve a empezar.
+c. ¿Aparece algún `ImplicitCastExpr` en el AST? ¿Qué conversión realiza? Si aparce el ImpicitCastExpr, bueno convierte el 1 que es un int a double que es el tipo que devuelve mi funcion potencia, esta pasando de int a double, eso hace.
