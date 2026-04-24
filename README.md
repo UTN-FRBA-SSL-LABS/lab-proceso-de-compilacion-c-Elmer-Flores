@@ -17,6 +17,7 @@ Este laboratorio se entrega a través de **GitHub Classroom**. Al aceptar el ass
 - **Local:** clonar el repositorio en tu máquina con `git clone` y trabajar con el editor que prefieras.
 - **GitHub Codespaces:** desde la página de tu repositorio, hacé clic en el botón verde **"Code" → "Codespaces" → "Create codespace"**. Se abre un VSCode en el navegador con todo el entorno listo, sin instalar nada.
 
+# trigger
 ### Paso a paso
 
 #### Paso 1: Clonar el repositorio
