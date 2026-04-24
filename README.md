@@ -347,7 +347,7 @@ Todos son correctos. Lo importante no es el número exacto sino que sea **varios
 **P1.** Ejecutá `wc -l programa.i` y escribí el número de líneas que obtenés.
 
 <!-- Completá la línea siguiente con el número exacto (solo dígitos, sin espacios): -->
-LINEAS_I= 1808
+LINEAS_I=1808
 
 ¿Por qué ese número es tan mayor que las 94 líneas de `programa.c`?
 
@@ -390,7 +390,7 @@ grep "Archivo fuente principal" programa.i   # no debe encontrar nada
 ¿El comando encuentra algo o no devuelve nada?
 
 <!-- Completá con SI (si encontró algo) o NO (si no encontró nada): -->
-COMENTARIOS_EN_I= NO
+COMENTARIOS_EN_I=NO
 
 ¿Por qué ocurre eso?
 
@@ -440,7 +440,7 @@ CUADRADO_EN_I=SI
 ¿Cuál era el nombre de la macro en `programa.c` que fue reemplazada por `"1.0"`?
 
 <!-- Completá con el nombre exacto de la macro (en mayúsculas, como está en el fuente): -->
-NOMBRE_MACRO_VERSION= VERSION
+NOMBRE_MACRO_VERSION=VERSION
 
 ---
 
@@ -661,24 +661,32 @@ Aparecen como instrucciones de llamada (por ejemplo `bl _area_circulo`), pero **
 
 **P7.** Ejecutá `grep "area_circulo" programa.s` y copiá la salida.
 
-> **R:** .ascii "area_circulo(%.1f) = %.4f\12\0"    call    area_circulo    .def    area_circulo;   .scl    2;      .type   32;     .endef
+> **R:** 
+```
+.ascii "area_circulo(%.1f) = %.4f\12\0"
+        call    area_circulo
+        .def    area_circulo;   .scl    2;      .type   32;     .endef
+```
 
 ¿`area_circulo` aparece como una función *definida* en `programa.s`
 (con su propio bloque de instrucciones) o solo como una *llamada* (instrucción sin cuerpo)?
 Respondé DEFINIDA o LLAMADA:
 
 <!-- Completá con DEFINIDA o LLAMADA: -->
-AREA_EN_S= DEFINIDA
+AREA_EN_S=DEFINIDA
 
 ---
 
 **P8.** Encontrá en `programa.s` la etiqueta `sumar:` o `_sumar:` y copiá
 las primeras 4 líneas de instrucciones que le siguen.
 
-> **R:** pushq   %rbp
-        .seh_pushreg    %rbp
-        movq    %rsp, %rbp
-        .seh_setframe   %rbp, 0
+> **R:** 
+```
+pushq   %rbp
+.seh_pushreg    %rbp
+movq    %rsp, %rbp
+.seh_setframe   %rbp, 0
+```
 
 Explicá en términos generales qué hacen esas instrucciones
 (usá los comentarios del laboratorio como guía):
@@ -696,18 +704,20 @@ grep "llamadas" programa.s
 
 **P9.** Ejecutá `grep "llamadas" programa.s` y copiá la salida.
 
-> **R:** globl  llamadas
+> **R:** 
+```
+globl  llamadas
 llamadas:
         movl    llamadas(%rip), %eax
         movl    %eax, llamadas(%rip)
         movl    llamadas(%rip), %eax
-
+```
 
 ¿Aparece la variable `llamadas` en el ensamblador?
 Respondé SI o NO:
 
 <!-- Completá con SI o NO: -->
-LLAMADAS_EN_S= SI
+LLAMADAS_EN_S=SI
 
 ---
 
@@ -811,7 +821,9 @@ Salida esperada (simplificada):
 
 **P10.** Ejecutá `nm programa.o` y copiá la salida completa.
 
-> **R:** 0000000000000000 p .pdata
+> **R:** 
+```
+0000000000000000 p .pdata
 0000000000000000 r .rdata
 0000000000000000 r .rdata$zzz
 0000000000000000 t .text
@@ -826,6 +838,7 @@ Salida esperada (simplificada):
 0000000000000077 T main
 0000000000000000 t printf
 0000000000000054 T sumar
+```
 
 ¿Con qué letra aparece `area_circulo` en esa tabla?
 Escribí solo la letra (una mayúscula):
@@ -876,7 +889,9 @@ Un `.o` no es ejecutable por dos razones:
 
 **P12.** Intentá ejecutar `./programa.o` directamente. ¿Qué mensaje aparece?
 
-> **R:**bash: ./programa.o: cannot execute binary file: Exec format error
+> **R:** bash: ./programa.o: cannot execute binary file: Exec format error
+
+
 
 ¿Se puede ejecutar un archivo `.o` directamente?
 Respondé SI o NO:
@@ -971,7 +986,7 @@ nm programa | grep area_circulo
 **P13.** Enlazá con `gcc programa.o matematica.o -o programa`.
 Ejecutá `nm programa | grep "area_circulo"` y copiá la salida.
 
-> **R:**0000000140001630 T area_circulo
+> **R:** 0000000140001630 T area_circulo
 
 ¿Con qué letra aparece ahora `area_circulo` en el ejecutable final?
 Escribí solo la letra:
@@ -993,7 +1008,10 @@ Quedan algunos `U` incluso en el ejecutable final. ¿Por qué? Son funciones de 
 
 **P14.** Ejecutá `nm programa | grep "^ *U"` y copiá la salida.
 
-> **R:**                 U __end__
+> **R:**
+```
+U __end__
+```
 
 ¿Quedan símbolos de tipo `U` en el ejecutable final?
 Respondé SI o NO:
@@ -1003,7 +1021,10 @@ SIMBOLOS_U_FINAL=SI
 
 ¿Por qué quedan? ¿Quién los resuelve y cuándo?
 
-> **R:**Porque son funciones de bibliotecas dinamicas del sistema, como se cargan a medida del tiempo de ejecucion, no les toma el nombre para quedan en espera y se resuelven al ejecutarse, de esta forma siendo mas ligeros
+> **R:**
+```
+Porque son funciones de bibliotecas dinamicas del sistema, como se cargan a medida del tiempo de ejecucion, no les toma el nombre para quedan en espera y se resuelven al ejecutarse, de esta forma siendo mas ligeros
+```
 
 ---
 
@@ -1017,7 +1038,22 @@ SIMBOLOS_U_FINAL=SI
 
 **P15.** Ejecutá `./programa` y copiá la salida completa.
 
-> **R:**MAX(7, 12) = 12 ---------------------------------------- area_circulo(5.0) = 78.5398 Factoriales: 0! = 1 1! = 1 2! = 2 3! = 6 4! = 24 5! = 120 ---------------------------------------- Llamadas a sumar(): 1
+> **R:**
+```
+ MAX(7, 12) = 12
+----------------------------------------
+area_circulo(5.0) = 78.5398
+Factoriales:
+0! = 1
+1! = 1
+2! = 2
+3! = 6
+4! = 24
+5! = 120
+----------------------------------------
+Llamadas a sumar(): 1
+```
+
 
 ¿Qué valor da `factorial(5)`? Escribí solo el número:
 
@@ -1034,7 +1070,7 @@ FACTORIAL_5=120
 como `CUADRADO(x)` y una **función real** como `sumar(a, b)`.
 ¿En qué etapa "desaparece" cada una? ¿Cuál tiene verificación de tipos?
 
-> **R:**CUADRADO es desaparece en la etapa de preprocesamiento y sumar desaparece en el enlazado, sumar tiene mejor verificacion de tipos
+> **R:** CUADRADO es desaparece en la etapa de preprocesamiento y sumar desaparece en el enlazado, sumar tiene mejor verificacion de tipos
 
 ---
 
@@ -1043,19 +1079,23 @@ en la salida de `nm`? ¿En qué sección del archivo objeto vive cada uno?
 
 > **R:** T algo esta definido, este se encuenta en la seccion de texto de codigo ejecutable, D define variables globales con valor inicial, esta en la seccion de data, y nm sirve para ver la informacion de cada simbolo dentro del archivo objeto, este no forma parte del archivo objeto es como una herramienta.  
 
+
 ---
 
 **P18.** (Bonus) Ejecutá `otool -L programa` (macOS) o `ldd programa` (Linux)
 y copiá la salida.
 
-> **R:**ntdll.dll => /c/WINDOWS/SYSTEM32/ntdll.dll (0x7ffbde430000)
-        KERNEL32.DLL => /c/WINDOWS/System32/KERNEL32.DLL (0x7ffbdd290000)
-        KERNELBASE.dll => /c/WINDOWS/System32/KERNELBASE.dll (0x7ffbdbec0000)
-        msvcrt.dll => /c/WINDOWS/System32/msvcrt.dll (0x7ffbdd880000)
+> **R:**
+```
+ntdll.dll => /c/WINDOWS/SYSTEM32/ntdll.dll (0x7ffbde430000)
+KERNEL32.DLL => /c/WINDOWS/System32/KERNEL32.DLL (0x7ffbdd290000)
+KERNELBASE.dll => /c/WINDOWS/System32/KERNELBASE.dll (0x7ffbdbec0000)
+msvcrt.dll => /c/WINDOWS/System32/msvcrt.dll (0x7ffbdd880000)
+```
 
 ¿Por qué `libc` no hubo que especificarla explícitamente al enlazar con `gcc`?
 
-> **R:**Como gcc actua como driver, al enlazar automaticamente incluye libc que es una biblioteca estandar de C
+> **R:** Como gcc actua como driver, al enlazar automaticamente incluye libc que es una biblioteca estandar de C
 
 ---
 
