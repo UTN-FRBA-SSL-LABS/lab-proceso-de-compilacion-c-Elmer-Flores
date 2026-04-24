@@ -23,3 +23,9 @@ int factorial(int n) {
     if (n <= 1) return 1;
     return n * factorial(n - 1);
 }
+
+
+double potencia(double base, int exp) {
+    if (exp==0) return 1;
+    else return base*potencia(base, exp-1);
+}

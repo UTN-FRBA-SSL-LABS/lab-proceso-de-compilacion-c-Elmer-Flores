@@ -2,7 +2,9 @@
 
 [DEBUG] Iniciando main
 sumar(3, 4)       = 7
-CUADRADO(5)      = 25
+12
+0
+holaCUADRADO(5)      = 25
 MAX(7, 12)        = 12
 ----------------------------------------
 area_circulo(5.0) = 78.5398

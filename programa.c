@@ -63,6 +63,11 @@ int main(void) {
     resultado = sumar(3, 4);
     printf("sumar(3, 4)       = %d\n", resultado);
 
+    int n = 3;
+    printf("%d\n", CUADRADO(n++));
+    printf("%d\n", potencia(n, 2));
+    printf("hola");
+
     /* Uso de macro función: CUADRADO se expande en tiempo de preprocesado */
     printf("CUADRADO(%d)      = %d\n", LIMITE, CUADRADO(LIMITE));
 
@@ -82,6 +87,8 @@ int main(void) {
     imprimir_separador();
 
     printf("Llamadas a sumar(): %d\n", llamadas);
+
+
 
     return EXIT_SUCCESS;
 }

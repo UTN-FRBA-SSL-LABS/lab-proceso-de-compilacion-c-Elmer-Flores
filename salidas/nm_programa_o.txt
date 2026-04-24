@@ -10,8 +10,9 @@
                  U __mingw_vfprintf
                  U area_circulo
                  U factorial
-00000000000001b3 T imprimir_separador
+000000000000022f T imprimir_separador
 0000000000000000 B llamadas
 0000000000000077 T main
+                 U potencia
 0000000000000000 t printf
 0000000000000054 T sumar
